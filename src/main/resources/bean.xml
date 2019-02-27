@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+xsi:schemaLocation="http://www.springframework.org/schema/beans 
+                    http://www.springframework.org/schema/beans/spring-beans.xsd">
     <!--
     <bean id="이름" class="클래스">
         <property name="속성 이름" value="값"/>
@@ -10,5 +11,21 @@ xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.sprin
     -->
     <bean id="bean1" class="com.devkuma.spring01demo.SomeBean">
         <property name="message" value="2019/2/27" />
+    </bean>
+
+    <!-- aop bean -->
+    <bean id="sampleAopBean" class="com.devkuma.spring.aop.sampleAopBean">
+        <property name="message" value="this is AOP bean!"/>
+    </bean>
+
+    <bean id="sampleMethodAdvice" class="com.devkuma.spring.aop.sampleMethodAdvice"/>
+    <!-- https://araikuma.tistory.com/302?category=780532 -->
+    <bean id="proxyFactoryBean" class="org.springframework.aop.framework.ProxyFactoryBean">
+        <property name="target" ref="sampleAopBean"/>
+        <property name="interceptorNames">
+            <list>
+                <value>sampleMethodAdvice</value>
+            </list>
+        </property>
     </bean>
 </beans>
