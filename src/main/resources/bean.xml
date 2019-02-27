@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+    <!--
+    <bean id="이름" class="클래스">
+        <property name="속성 이름" value="값"/>
+        ...... 필요한 만큼 <property>를 추가 ......
+    </bean>
+    -->
+    <bean id="bean1" class="com.devkuma.spring01demo.SomeBean">
+        <property name="message" value="2019/2/27" />
+    </bean>
+</beans>
