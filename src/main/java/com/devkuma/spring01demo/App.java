@@ -1,14 +1,17 @@
 package com.devkuma.spring01demo;
 
-import com.devkuma.spring.SampleBeanConfig;
+// import com.devkuma.spring.SampleBeanConfig;
 //import com.devkuma.spring.BeanHolder;
 //import com.devkuma.spring.SampleBeanConfig;
 import com.devkuma.spring.aop.SampleAopBean;
+import com.devkuma.spring.aop.SampleAspectConfig;
 
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+// import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 //import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 //import org.springframework.context.support.ClassPathXmlApplicationContext;
+// import org.springframework.context.support.ClassPathXmlApplicationContext;
 // import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 /**
@@ -38,7 +41,7 @@ public class App
 
         // Resource leak: 'app' is never closed
         ((AnnotationConfigApplicationContext) app).close();
-         */
+        */
 
         /**
          * 여기에서는 AnnotationConfigApplicationContext 인스턴스를 생성 한 후, getBean에서 "BeanHolder.class"를 인수로 지정해서 BeanHolder 인스턴스를 얻었다.
@@ -47,6 +50,7 @@ public class App
          * 또한 그 내부에서는 @Autowired로 인해 SampleBean이 자동으로 필드에 설정되어 있었으므로, 그 값이 showMessage에서 출력되어 있었다는 것이다.
          */
 
+        /**
         // AOP 사용부분
         // ApplicationContext app = new ClassPathXmlApplicationContext("bean.xml");
         ApplicationContext app = new AnnotationConfigApplicationContext(SampleBeanConfig.class);
@@ -62,6 +66,20 @@ public class App
         SampleAopBean bean2 = (SampleAopBean) app.getBean("proxyFactoryBean");
         bean2.printMessage();
 
+        ((AnnotationConfigApplicationContext) app).close();
+        */
+
+        // ApplicationContext app = new ClassPathXmlApplicationContext("aopbean.xml");
+        ApplicationContext app = new AnnotationConfigApplicationContext(SampleAspectConfig.class);
+
+        SampleAopBean bean = (SampleAopBean) app.getBean("sampleAopBean");
+        
+        // 각 메소드를 호출 할 때마다 출력됨
+        String msg = bean.getMessage();
+        bean.setMessage("<<" + msg + ">>");
+        bean.printMessage();
+
+        // ((ClassPathXmlApplicationContext) app).close();
         ((AnnotationConfigApplicationContext) app).close();
     }
 }
