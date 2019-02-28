@@ -1,13 +1,15 @@
 package com.devkuma.spring01demo;
 
+import com.devkuma.spring.SampleBeanConfig;
 //import com.devkuma.spring.BeanHolder;
 //import com.devkuma.spring.SampleBeanConfig;
 import com.devkuma.spring.aop.SampleAopBean;
 
 import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 //import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 //import org.springframework.context.support.ClassPathXmlApplicationContext;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
+// import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 /**
  * Hello world!
@@ -46,7 +48,8 @@ public class App
          */
 
         // AOP 사용부분
-        ApplicationContext app = new ClassPathXmlApplicationContext("bean.xml");
+        // ApplicationContext app = new ClassPathXmlApplicationContext("bean.xml");
+        ApplicationContext app = new AnnotationConfigApplicationContext(SampleBeanConfig.class);
         
         SampleAopBean bean1 = (SampleAopBean) app.getBean("sampleAopBean");
         bean1.printMessage();
@@ -59,6 +62,6 @@ public class App
         SampleAopBean bean2 = (SampleAopBean) app.getBean("proxyFactoryBean");
         bean2.printMessage();
 
-        ((ClassPathXmlApplicationContext) app).close();
+        ((AnnotationConfigApplicationContext) app).close();
     }
 }
