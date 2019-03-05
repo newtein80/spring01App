@@ -33,6 +33,7 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
  */
 public class App 
 {
+    private static EntityManager manager;
     public static void main( String[] args )
     {
         /**
@@ -98,9 +99,13 @@ public class App
 
         // Bean 설정 파일에 준비해 놓은 엔티티 관리자 팩토리 Bean을 얻어 온다.
         EntityManagerFactory factory = app.getBean(EntityManagerFactory.class);
-        EntityManager manager = factory.createEntityManager();
+        // EntityManager manager = factory.createEntityManager();
+        manager = factory.createEntityManager();
 
         makeDummyData(manager);
+
+        updateEntityData(1L);
+        deleteEntityData(2L);
 
         /**
          * "Query"라는 클래스의 인스턴스를 만들고, 해당 메서드를 호출하여 전체 엔터티 목록을 검색한다. 
@@ -110,7 +115,7 @@ public class App
          */
         // Query query = manager.createQuery("from SampleEntity");
         // https://stackoverflow.com/questions/13700565/jpa-query-getresultlist-use-in-a-generic-way
-        TypedQuery<SampleEntity> query = manager.createQuery("from SampleEntity", SampleEntity.class);
+        TypedQuery<SampleEntity> query = manager.createQuery("from SampleEntity where name like '%Up%'", SampleEntity.class);
         /**
          * "getResultList"을 호출하면, 가져온 엔티티를 목록으로 얻을 수 있다. 
          * 그 다음, l결과 목록(list)에서 부터 차례로 엔티티를 꺼내 처리하면 된다.
@@ -120,6 +125,26 @@ public class App
         printList(list);
 
         System.out.println("Ok....");
+    }
+
+    private static void deleteEntityData(long id) {
+        SampleEntity entity = manager.find(SampleEntity.class, id);
+        EntityTransaction transaction = manager.getTransaction();
+        transaction.begin();
+        manager.remove(entity);
+        manager.flush();
+        transaction.commit();
+    }
+
+    private static void updateEntityData(long id) {
+        SampleEntity entity = manager.find(SampleEntity.class, id);
+        entity.setName("**Update Name**");
+        entity.setMail("**Update Mail**");
+        EntityTransaction transaction = manager.getTransaction();
+        transaction.begin();
+        manager.merge(entity);
+        manager.flush();
+        transaction.commit();
     }
 
     private static void printList(List list) {
