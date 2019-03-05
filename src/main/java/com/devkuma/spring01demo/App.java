@@ -13,6 +13,7 @@ import javax.persistence.Query;
 import com.devkuma.spring.aop.SampleAopBean;
 import com.devkuma.spring.aop.SampleAspectConfig;
 import com.devkuma.spring.db.SampleEntity;
+import com.devkuma.spring.db.SampleEntityConfig;
 
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
@@ -91,7 +92,8 @@ public class App
         // // ((ClassPathXmlApplicationContext) app).close();
         // ((AnnotationConfigApplicationContext) app).close();
 
-        ApplicationContext app = new ClassPathXmlApplicationContext("dbbean.xml");
+        // ApplicationContext app = new ClassPathXmlApplicationContext("dbbean.xml");
+        ApplicationContext app = new AnnotationConfigApplicationContext(SampleEntityConfig.class);
 
         // Bean 설정 파일에 준비해 놓은 엔티티 관리자 팩토리 Bean을 얻어 온다.
         EntityManagerFactory factory = app.getBean(EntityManagerFactory.class);
