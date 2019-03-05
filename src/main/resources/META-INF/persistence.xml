@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+    <persistence xmlns="http://xmlns.jcp.org/xml/ns/persistence" 
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+    xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence 
+                        http://xmlns.jcp.org/xml/ns/persistence/persistence.xsd">
+    
+    <!-- "지속성 단위(Persistence unit)"이라고하는 정보를 포함 -->
+    <!-- JPA에서 데이터베이스 액세스를 실행하기 위하여 "지속성"이라는 것을 제공한다. 
+    즉, 이 persistence.xml 안에는 액세스하는 데이터베이스에 대한 정보를 기술해 두는 것이라고 생각하면 된다. -->
+    <!-- 지속성 단위의 정보를 기술하는 태그 -->
+    <persistence-unit name="persistence-unit" transaction-type="RESOURCE_LOCAL">
+        <!-- <provider> 태그에 "공급자" 클래스를 지정하고, 추가로 <properties> 태그에 필요한 정보를 속성으로 기술하고 있다.  -->
+        <provider>org.hibernate.ejb.HibernatePersistence</provider>
+        <properties>
+            <!-- Dialect는 데이터베이스와 상호 작용을 하는 클래스, 시작 및 종료시 데이터베이스 처리에 대한 설정 -->
+            <!-- H2를 이용하기 위한 Dialect와 시작할 때 새로운 데이터베이스를 준비하고, 종료시 삭제하는 설정을 하고 있다. -->
+            <!-- 속성의 값은 ${XX} 형태로 쓰여 있다. 이것은 속성 파일에 포함되어 있는 값을 집어 넣어서 사용하게 되어있는 것 -->
+            <property name="hibernate.diarect" value="${hibernate.dialect}" />
+            <property name="hibernate.hbm2ddl.auto" value="${hibernate.hbm2ddl.auto}" />
+
+            <property name="javax.persistence.jdbc.driver" value="${db.driver}" />
+            <property name="javax.persistence.jdbc.url" value="${db.url}" />
+            <property name="javax.persistence.jdbc.user" value="${db.user}" />
+            <property name="javax.persistence.jdbc.password" value="${db.password}" />
+        </properties>
+    </persistence-unit>
+</persistence>

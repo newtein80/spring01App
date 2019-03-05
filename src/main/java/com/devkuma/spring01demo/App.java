@@ -1,10 +1,18 @@
 package com.devkuma.spring01demo;
 
+import java.util.List;
+
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.EntityTransaction;
+import javax.persistence.Query;
+
 // import com.devkuma.spring.SampleBeanConfig;
 //import com.devkuma.spring.BeanHolder;
 //import com.devkuma.spring.SampleBeanConfig;
 import com.devkuma.spring.aop.SampleAopBean;
 import com.devkuma.spring.aop.SampleAspectConfig;
+import com.devkuma.spring.db.SampleEntity;
 
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
@@ -13,6 +21,7 @@ import org.springframework.context.annotation.AnnotationConfigApplicationContext
 //import org.springframework.context.support.ClassPathXmlApplicationContext;
 // import org.springframework.context.support.ClassPathXmlApplicationContext;
 // import org.springframework.context.support.ClassPathXmlApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 /**
  * Hello world!
@@ -70,16 +79,47 @@ public class App
         */
 
         // ApplicationContext app = new ClassPathXmlApplicationContext("aopbean.xml");
-        ApplicationContext app = new AnnotationConfigApplicationContext(SampleAspectConfig.class);
+        // ApplicationContext app = new AnnotationConfigApplicationContext(SampleAspectConfig.class);
 
-        SampleAopBean bean = (SampleAopBean) app.getBean("sampleAopBean");
+        // SampleAopBean bean = (SampleAopBean) app.getBean("sampleAopBean");
         
-        // 각 메소드를 호출 할 때마다 출력됨
-        String msg = bean.getMessage();
-        bean.setMessage("<<" + msg + ">>");
-        bean.printMessage();
+        // // 각 메소드를 호출 할 때마다 출력됨
+        // String msg = bean.getMessage();
+        // bean.setMessage("<<" + msg + ">>");
+        // bean.printMessage();
 
-        // ((ClassPathXmlApplicationContext) app).close();
-        ((AnnotationConfigApplicationContext) app).close();
+        // // ((ClassPathXmlApplicationContext) app).close();
+        // ((AnnotationConfigApplicationContext) app).close();
+
+        ApplicationContext app = new ClassPathXmlApplicationContext("dbbean.xml");
+
+        // Bean 설정 파일에 준비해 놓은 엔티티 관리자 팩토리 Bean을 얻어 온다.
+        EntityManagerFactory factory = app.getBean(EntityManagerFactory.class);
+        EntityManager manager = factory.createEntityManager();
+
+        makeDummyData(manager);
+
+        Query query = manager.createQuery("from SampleEntity");
+        List list = query.getResultList();
+        printList(list);
+
+        System.out.println("Ok....");
+    }
+
+    private static void printList(List list) {
+        for (Object item : list) {
+            System.out.println(item);
+        }
+    }
+
+    private static void makeDummyData(EntityManager manager) {
+        EntityTransaction transaction = manager.getTransaction();
+        transaction.begin();
+
+        manager.persist(new SampleEntity("park", "park@mail.com"));
+        manager.persist(new SampleEntity("kim", "kim@mail.com"));
+        manager.flush();
+        
+        transaction.commit();
     }
 }

@@ -48,6 +48,55 @@
       <artifactId>aspectjweaver</artifactId>
       <version>1.8.6</version>
     </dependency>
+    <!-- 
+    Hibernate 등 ORM(Object Relational Mapping)은 
+    SQL 등을 사용하는 데이터베이스의 액세스와 Java의 Objective 코드와 일관성을 위한 기술로 널리 사용되고 있다.
+    그러한 ORM 관련 기술 중에서도 Java의 순정 기술으로 스며들어 있는 것이 "JPA(Java Persistence API)"이다.
+    아무튼, JPA 자체는 ORM을 위한 기술이라기 보다는 SQL을 Java 나름대로 쉽게 사용할 것이라는 느낌이지만,
+    데이터베이스 및 Java 오브젝트의 중개 역할을 위한 기본적인 기술로 많은 프레임워크에서도 사용되고 있다.
+    Spring Framework에도 JPA를 이용하여 데이터베이스에 액세스를 하는 'Spring Data JPA'라는 라이브러리가 포함되어 있다. 
+    이것은 "Spring Data"라는 데이터베이스 액세스 관련 라이브러리 중 하나이다. 
+    이 밖에 비(非)SQL인 MongoDB를 이용하는 "Spring Data MongoDB"와 Hadoop 이용을 위한 "Spring Data Hadoop"등의 것이 준비되어 있다. 
+    Spring Data JPA는 일반적인 SQL 의한 관계형 데이터베이스 전반을 이용하기 위한 것으로, 
+    Spring Data의 기본이 되는 라이브러리라고 해도 좋을 것이다.
+    -->
+    <!-- Database (H2) -->
+    <dependency>
+      <groupId>com.h2database</groupId>
+      <!-- 
+      "com.h2database" 아티팩트(Artifact) ID에 "h2"를 지정하고 있다. 
+      H2는 Java SQL 데이터베이스 엔진이다. 
+      데이터베이스 파일에 직접 액세스하여 데이터를 저장할 수 있다. 
+      보통 데이터베이스라고 하면 MySQL이나 PostgreSQL 등이 떠오를 것이다. 
+      Java 라이브러리로 구현된 H2와 같은 데이터베이스 엔진은 데이터베이스 서버의 설치 등이 번거로운 일을 할 필요가 없고, 
+      부담없이 이용할 수 있으므로, 학습용으로 적합하다. 
+      -->
+      <artifactId>h2</artifactId>
+      <version>1.4.187</version>
+    </dependency>
+    <!-- JPA Provider (Hibernate) -->
+    <dependency>
+      <groupId>org.hibernate</groupId>
+      <!-- 
+      JPA에는 "엔티티"라는 형태로 데이터베이스의 데이터를 오브젝트화한다. 
+      이 엔티티를 관리하는 것이 엔티티 관리자(EntityManager)이다. 
+      이것은 여러 가지가 있지만, 스스로 사용하기 쉬운 것을 선택해서 구성 이용 가능하도록 되어 있다. 
+      이번에는 Hibernate가 생성하는 엔티티 관리자를 사용하고 있다. 
+      그룹 ID "org.hibernate" Artifact ID은 "hibernate-entitymanager"로 지정한다. 
+      -->
+      <artifactId>hibernate-entitymanager</artifactId>
+      <version>4.3.10.Final</version>
+    </dependency>
+    <!-- Spring Data JPA -->
+    <dependency>
+      <!-- 
+      Spring Data JPA의 본체 라이브러리이다. 
+      그룹 ID는 "org.springframework.data", 아티팩트 ID가 "spring-data-jpa"을 각각 지정한다. 
+      -->
+      <groupId>org.springframework.data</groupId>
+      <artifactId>spring-data-jpa</artifactId>
+      <version>1.9.5.RELEASE</version>
+    </dependency>
   </dependencies>
 
   <build>

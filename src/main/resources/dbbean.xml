@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" 
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+    xmlns:jpa="http://www.springframework.org/schema/data/jpa" 
+    xmlns:jdbc="http://www.springframework.org/schema/jdbc" 
+    xsi:schemaLocation="http://www.springframework.org/schema/beans 
+                        http://www.springframework.org/schema/beans/spring-beans.xsd 
+                        http://www.springframework.org/schema/jdbc 
+                        http://www.springframework.org/schema/jdbc/spring-jdbc.xsd 
+                        http://www.springframework.org/schema/data/jpa 
+                        http://www.springframework.org/schema/data/jpa/spring-jpa.xsd">
+    <!-- 데이터베이스의 데이터 정보(데이터 소스) 오브젝트에 대한 것이다. 
+    id="dataSource"라고 명시되어 있고, 그 엔티티 관리자 팩토리에서 이 Bean을 사용하기 위한 ID이다. 
+    또한 type="H2"은 데이터베이스로 H2를 사용하고 있음을 나타낸다. -->
+    <!-- SHIFT + ALT + F (CTRL + SHIFT + I on Linux) -->
+    <!-- https://github.com/DotJoshJohnson/vscode-xml/wiki/xml-formatting -->
+    <jdbc:embedded-database id="dataSource" type="H2" />
+
+    <!-- 엔티티 관리자 팩토리의 Bean 정의 -->
+    <bean id="entityManagerFactory" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
+        <!-- <jdbc : embedded-database> 마련한 Bean이 지정된다. -->
+        <property name="dataSource" ref="dataSource"/>
+        <!-- JPA 벤더 어댑터라는 것을 지정 -->
+        <property name="jpaVendorAdapter">
+            <!-- JPA 벤더 어댑터라는 것을 지정한다. 여기에서는 HibernateJpaVendorAdapter 클래스의 Bean을 사용할 수 있어야 한다. -->
+            <bean class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter">
+                <!-- generateDdl이라는 속성을 제공하고 데이터베이스를 자동으로 생성할 수 있도록 해야 한다. -->
+                <property name="generateDdl" value="true" />
+            </bean>
+        </property>
+    </bean>
+</beans>
