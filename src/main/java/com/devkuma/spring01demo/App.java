@@ -127,7 +127,8 @@ public class App
 
         // System.out.println("Ok....");
         
-        ApplicationContext app = new ClassPathXmlApplicationContext("dbbean.xml");
+        // ApplicationContext app = new ClassPathXmlApplicationContext("dbbean.xml");
+        ApplicationContext app = new AnnotationConfigApplicationContext(SampleEntityConfig.class);
 
         EntityManagerFactory factory = app.getBean(EntityManagerFactory.class);
         manager = factory.createEntityManager();
