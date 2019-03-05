@@ -133,12 +133,19 @@ public class App
         EntityManagerFactory factory = app.getBean(EntityManagerFactory.class);
         manager = factory.createEntityManager();
 
-        SampleEntityRepository repository = app.getBean(SampleEntityRepository.class);
-
         makeDummyDataUseRepository();
 
-        List list = repository.findAll();
-        printList(list);
+        SampleEntityRepository repository = app.getBean(SampleEntityRepository.class);
+
+        List list1 = repository.findByNameLike("%y1");
+        System.out.println("*Find By Name*");
+        printList(list1);
+        List list2 = repository.findByMailEndingWith(".com");
+        System.out.println("*Find By Mail");
+        printList(list2);
+
+        // List list = repository.findAll();
+        // printList(list);
 
         System.out.println("OK...!!");
     }
