@@ -6,6 +6,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityTransaction;
 import javax.persistence.Query;
+import javax.persistence.TypedQuery;
 
 // import com.devkuma.spring.SampleBeanConfig;
 //import com.devkuma.spring.BeanHolder;
@@ -101,8 +102,21 @@ public class App
 
         makeDummyData(manager);
 
-        Query query = manager.createQuery("from SampleEntity");
-        List list = query.getResultList();
+        /**
+         * "Query"라는 클래스의 인스턴스를 만들고, 해당 메서드를 호출하여 전체 엔터티 목록을 검색한다. 
+         * Query라는 것은 SQL 쿼리 문장의 단순화 된 버전과 같은 문장을 사용하여 데이터베이스에 액세스하기 위한 것
+         * 인스턴스 생성은 new 대신 "createQuery"라는 메소드를 이용한다. 
+         * 인수는 "from SampleEntity" 텍스트을 넣었다. 이것이 SampleEntity 엔티티를 모두 취득하는 것을 나타내는 구문
+         */
+        // Query query = manager.createQuery("from SampleEntity");
+        // https://stackoverflow.com/questions/13700565/jpa-query-getresultlist-use-in-a-generic-way
+        TypedQuery<SampleEntity> query = manager.createQuery("from SampleEntity", SampleEntity.class);
+        /**
+         * "getResultList"을 호출하면, 가져온 엔티티를 목록으로 얻을 수 있다. 
+         * 그 다음, l결과 목록(list)에서 부터 차례로 엔티티를 꺼내 처리하면 된다.
+         */
+        // List list = query.getResultList();
+        List<SampleEntity> list = query.getResultList();
         printList(list);
 
         System.out.println("Ok....");
@@ -115,11 +129,27 @@ public class App
     }
 
     private static void makeDummyData(EntityManager manager) {
+        // 엔티티 클래스의 인스턴스를 만들고 EntityManager에 있는 저장용의 메소드를 호출하기만 하면 된다.
+        /**
+         * 데이터베이스 조작은 단순히 데이터를 읽기만 한다면 간단하지만 데이터를 갱신하는 경우에는 주의가 필요하다.
+         * 데이터베이스는 동시에 여러 곳에서 액세스되는 경우도 있다.
+         * 따라서 다른 데이터가 액세스되는 동안에 데이터가 갱신이 되거나 한다면 문제가 일어날 수 있다.
+         * 따라서 데이터의 갱신이 필요한 경우에는 "트랜잭션"이라는 것을 사용해야 한다.
+         * 트랜잭션은 여러 처리를모와서 실행 할 수 있도록하는 기능이다.
+         * 트랜잭션을 지정하는 동안에는 그 처리를 실시하고 있는 해당 데이터에 대해서, 외부에서 액세스를 할 수 없게 된다.
+         * 트랜잭션 처리가 완료된 후에는 외부에서 부터 데이터 액세스 가능해 진다.
+         */
         EntityTransaction transaction = manager.getTransaction();
         transaction.begin();
 
         manager.persist(new SampleEntity("park", "park@mail.com"));
         manager.persist(new SampleEntity("kim", "kim@mail.com"));
+        /**
+         * EntityManager의 'flush'을 호출해서 버퍼를 비우고,
+         * EntityTransaction의 "commit"메서드를 호출하여 커밋하면
+         * persist한 엔티티가 전부 데이터베이스에 저장된다.
+         * 커밋을 하면 바로 트랜잭션 처리는 종료되고, 데이터베이스는 개방된다.
+         */
         manager.flush();
         
         transaction.commit();
