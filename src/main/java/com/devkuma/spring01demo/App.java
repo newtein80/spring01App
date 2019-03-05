@@ -15,6 +15,7 @@ import com.devkuma.spring.aop.SampleAopBean;
 import com.devkuma.spring.aop.SampleAspectConfig;
 import com.devkuma.spring.db.SampleEntity;
 import com.devkuma.spring.db.SampleEntityConfig;
+import com.devkuma.spring.db.SampleEntityRepository;
 
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
@@ -94,37 +95,60 @@ public class App
         // // ((ClassPathXmlApplicationContext) app).close();
         // ((AnnotationConfigApplicationContext) app).close();
 
-        // ApplicationContext app = new ClassPathXmlApplicationContext("dbbean.xml");
-        ApplicationContext app = new AnnotationConfigApplicationContext(SampleEntityConfig.class);
+        // // ApplicationContext app = new ClassPathXmlApplicationContext("dbbean.xml");
+        // ApplicationContext app = new AnnotationConfigApplicationContext(SampleEntityConfig.class);
 
-        // Bean 설정 파일에 준비해 놓은 엔티티 관리자 팩토리 Bean을 얻어 온다.
+        // // Bean 설정 파일에 준비해 놓은 엔티티 관리자 팩토리 Bean을 얻어 온다.
+        // EntityManagerFactory factory = app.getBean(EntityManagerFactory.class);
+        // // EntityManager manager = factory.createEntityManager();
+        // manager = factory.createEntityManager();
+
+        // makeDummyData(manager);
+
+        // updateEntityData(1L);
+        // deleteEntityData(2L);
+
+        // /**
+        //  * "Query"라는 클래스의 인스턴스를 만들고, 해당 메서드를 호출하여 전체 엔터티 목록을 검색한다. 
+        //  * Query라는 것은 SQL 쿼리 문장의 단순화 된 버전과 같은 문장을 사용하여 데이터베이스에 액세스하기 위한 것
+        //  * 인스턴스 생성은 new 대신 "createQuery"라는 메소드를 이용한다. 
+        //  * 인수는 "from SampleEntity" 텍스트을 넣었다. 이것이 SampleEntity 엔티티를 모두 취득하는 것을 나타내는 구문
+        //  */
+        // // Query query = manager.createQuery("from SampleEntity");
+        // // https://stackoverflow.com/questions/13700565/jpa-query-getresultlist-use-in-a-generic-way
+        // TypedQuery<SampleEntity> query = manager.createQuery("from SampleEntity where name like '%Up%'", SampleEntity.class);
+        // /**
+        //  * "getResultList"을 호출하면, 가져온 엔티티를 목록으로 얻을 수 있다. 
+        //  * 그 다음, l결과 목록(list)에서 부터 차례로 엔티티를 꺼내 처리하면 된다.
+        //  */
+        // // List list = query.getResultList();
+        // List<SampleEntity> list = query.getResultList();
+        // printList(list);
+
+        // System.out.println("Ok....");
+        
+        ApplicationContext app = new ClassPathXmlApplicationContext("dbbean.xml");
+
         EntityManagerFactory factory = app.getBean(EntityManagerFactory.class);
-        // EntityManager manager = factory.createEntityManager();
         manager = factory.createEntityManager();
 
-        makeDummyData(manager);
+        SampleEntityRepository repository = app.getBean(SampleEntityRepository.class);
 
-        updateEntityData(1L);
-        deleteEntityData(2L);
+        makeDummyDataUseRepository();
 
-        /**
-         * "Query"라는 클래스의 인스턴스를 만들고, 해당 메서드를 호출하여 전체 엔터티 목록을 검색한다. 
-         * Query라는 것은 SQL 쿼리 문장의 단순화 된 버전과 같은 문장을 사용하여 데이터베이스에 액세스하기 위한 것
-         * 인스턴스 생성은 new 대신 "createQuery"라는 메소드를 이용한다. 
-         * 인수는 "from SampleEntity" 텍스트을 넣었다. 이것이 SampleEntity 엔티티를 모두 취득하는 것을 나타내는 구문
-         */
-        // Query query = manager.createQuery("from SampleEntity");
-        // https://stackoverflow.com/questions/13700565/jpa-query-getresultlist-use-in-a-generic-way
-        TypedQuery<SampleEntity> query = manager.createQuery("from SampleEntity where name like '%Up%'", SampleEntity.class);
-        /**
-         * "getResultList"을 호출하면, 가져온 엔티티를 목록으로 얻을 수 있다. 
-         * 그 다음, l결과 목록(list)에서 부터 차례로 엔티티를 꺼내 처리하면 된다.
-         */
-        // List list = query.getResultList();
-        List<SampleEntity> list = query.getResultList();
+        List list = repository.findAll();
         printList(list);
 
-        System.out.println("Ok....");
+        System.out.println("OK...!!");
+    }
+
+    private static void makeDummyDataUseRepository() {
+        EntityTransaction transaction = manager.getTransaction();
+        transaction.begin();
+        manager.persist(new SampleEntity("repostory1", "repository1@mail.com"));
+        manager.persist(new SampleEntity("repostory2", "repository2@mail.com"));
+        manager.flush();
+        transaction.commit();
     }
 
     private static void deleteEntityData(long id) {

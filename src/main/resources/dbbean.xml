@@ -2,15 +2,13 @@
 <beans xmlns="http://www.springframework.org/schema/beans" 
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
     xmlns:jpa="http://www.springframework.org/schema/data/jpa" 
-    xmlns:jdbc="http://www.springframework.org/schema/jdbc" 
-    xsi:schemaLocation="http://www.springframework.org/schema/beans 
+    xmlns:jdbc="http://www.springframework.org/schema/jdbc" xsi:schemaLocation="http://www.springframework.org/schema/beans 
                         http://www.springframework.org/schema/beans/spring-beans.xsd 
                         http://www.springframework.org/schema/jdbc 
                         http://www.springframework.org/schema/jdbc/spring-jdbc.xsd 
                         http://www.springframework.org/schema/data/jpa 
                         http://www.springframework.org/schema/data/jpa/spring-jpa.xsd">
-    <!-- 데이터베이스의 데이터 정보(데이터 소스) 오브젝트에 대한 것이다. 
-    id="dataSource"라고 명시되어 있고, 그 엔티티 관리자 팩토리에서 이 Bean을 사용하기 위한 ID이다. 
+    <!-- 데이터베이스의 데이터 정보(데이터 소스) 오브젝트에 대한 것이다. id="dataSource"라고 명시되어 있고, 그 엔티티 관리자 팩토리에서 이 Bean을 사용하기 위한 ID이다. 
     또한 type="H2"은 데이터베이스로 H2를 사용하고 있음을 나타낸다. -->
     <!-- SHIFT + ALT + F (CTRL + SHIFT + I on Linux) -->
     <!-- https://github.com/DotJoshJohnson/vscode-xml/wiki/xml-formatting -->
@@ -28,5 +26,18 @@
                 <property name="generateDdl" value="true" />
             </bean>
         </property>
+    </bean>
+
+    <!-- <jpa:repositories> 태그에는 base-package라는 속성이 포함되어 있다. 
+    이제 검색할 위치(패키지)를 지정한다. 
+    이렇게 하면 지정된 패키지 내에서 JpaRepository을 찾아서 Bean 화한다.
+    <jpa:repositories>에 의해 지정된 패키지를 검색하고 @repository가 지정된 JpaRepository를 Bean으로 자동 등록하게 되는 것이다.
+    -->
+    <jpa:repositories base-package="com.devkuma.spring.db" />
+    <!-- transactionManager"라는 이름의 Bean으로써, class에는 JpaTransactionManager 클래스를 지정한다. 
+    다른 "entityManagerFactory"라는 속성이 있는데, 이것은 작성하는 Bean에서 사용하는 EntityManagerFactory를 지정한다 
+    (위에 있는 id="entityManagerFactory"를 ref로 지정되어 있다). -->
+    <bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">
+        <property name="entityManagerFactory" ref="entityManagerFactory" />
     </bean>
 </beans>
